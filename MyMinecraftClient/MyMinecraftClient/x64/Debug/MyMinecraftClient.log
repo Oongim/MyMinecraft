@@ -1,0 +1,18 @@
+﻿Main.obj : error LNK2019: __imp_glewInitmain 함수에서 참조되는 확인할 수 없는 외부 기호
+Main.obj : error LNK2019: __imp_glewIsSupportedmain 함수에서 참조되는 확인할 수 없는 외부 기호
+Main.obj : error LNK2019: __imp_glutInitWindowPositionmain 함수에서 참조되는 확인할 수 없는 외부 기호
+Main.obj : error LNK2019: __imp_glutInitWindowSizemain 함수에서 참조되는 확인할 수 없는 외부 기호
+Main.obj : error LNK2019: __imp_glutInitDisplayModemain 함수에서 참조되는 확인할 수 없는 외부 기호
+Main.obj : error LNK2019: __imp_glutMainLoopmain 함수에서 참조되는 확인할 수 없는 외부 기호
+Main.obj : error LNK2019: __imp_glutIdleFuncmain 함수에서 참조되는 확인할 수 없는 외부 기호
+Main.obj : error LNK2019: __imp_glutKeyboardFuncmain 함수에서 참조되는 확인할 수 없는 외부 기호
+Main.obj : error LNK2019: __imp_glutSpecialFuncmain 함수에서 참조되는 확인할 수 없는 외부 기호
+Main.obj : error LNK2019: __imp_glutDisplayFuncmain 함수에서 참조되는 확인할 수 없는 외부 기호
+Main.obj : error LNK2019: __imp_glutMouseFuncmain 함수에서 참조되는 확인할 수 없는 외부 기호
+Main.obj : error LNK2019: __imp_glutKeyboardUpFuncmain 함수에서 참조되는 확인할 수 없는 외부 기호
+Main.obj : error LNK2019: __imp_glutSpecialUpFuncmain 함수에서 참조되는 확인할 수 없는 외부 기호
+Main.obj : error LNK2019: __imp___glutInitWithExitglutInit_ATEXIT_HACK 함수에서 참조되는 확인할 수 없는 외부 기호
+Main.obj : error LNK2019: __imp___glutCreateWindowWithExitglutCreateWindow_ATEXIT_HACK 함수에서 참조되는 확인할 수 없는 외부 기호
+.\Dependencies\lib\freeglut.lib : warning LNK4272: 'x86' 라이브러리 컴퓨터 종류가 'x64' 대상 컴퓨터 종류와 충돌합니다.
+.\Dependencies\lib\glew32.lib : warning LNK4272: 'x86' 라이브러리 컴퓨터 종류가 'x64' 대상 컴퓨터 종류와 충돌합니다.
+C:\Users\rkdqm\Documents\GitHub\MyMinecraft\MyMinecraftClient\x64\Debug\MyMinecraftClient.exe : fatal error LNK1120: 15개의 확인할 수 없는 외부 참조입니다.

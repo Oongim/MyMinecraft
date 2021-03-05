@@ -1,6 +1,8 @@
 #include "global.h"
-//#include "Dependencies/glew.h"
+
+#include <GL/glew.h>
 #include <GL/freeglut.h>
+
 
 void RenderScene(int temp)
 {
@@ -43,9 +45,10 @@ int main(int argc, char** argv)
 	glutInitWindowSize(800, 600);		// 프로그램 외부 사이즈 결정
 	glutCreateWindow("Game Software Engineering KPU");
 
-	/*glewInit();
+	
+	glewInit();
 	if (glewIsSupported("GL_VERSION_3_0"))	std::cout << " GLEW Version is 3.0\n ";
-	else									std::cout << "GLEW 3.0 not supported\n ";*/
+	else									std::cout << "GLEW 3.0 not supported\n ";
 
 	// 생성자는 이곳에
 
