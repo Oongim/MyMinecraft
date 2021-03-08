@@ -31,8 +31,15 @@
 *.out
 *.app
 
-.vs/
 
 MyMinecraftClient/MyMinecraftClient/Release/
 MyMinecraftClient/MyMinecraftClient/Debug/
 MyMinecraftClient/MyMinecraftClient/x64/
+MyMinecraftClient/Release/
+MyMinecraftClient/Debug/
+
+*.ipch
+*.db
+*.db-shm
+*.db-wal
+*.opendb

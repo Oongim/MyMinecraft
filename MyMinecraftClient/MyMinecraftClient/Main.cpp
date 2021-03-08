@@ -25,10 +25,11 @@ void Update(int temp)
 void Display(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClearColor(0.f, 0.f, 1.f, 1.0f);
+	glClearColor(0.f, 0.f, 0.f, 1.0f);
 
 	g_ScnMgr->DrawScene();
 
+	glFlush();
 	glutSwapBuffers(); // 화면에 출력하기
 }
 

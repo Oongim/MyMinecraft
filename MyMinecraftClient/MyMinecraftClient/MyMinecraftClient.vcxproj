@@ -150,11 +150,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="Scene_GamePlay.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Global.h" />
+    <ClInclude Include="Renderer.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="Scene_GamePlay.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\vertex_color.fs" />
+    <None Include="Shaders\vertex_color.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

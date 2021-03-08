@@ -1,9 +1,12 @@
 #pragma once
 #include "Global.h"
+#include "Scene_GamePlay.h"
 
 class SceneManager
 {
 private:
+	Renderer* m_Renderer;
+	Scene* m_CurrentScene;
 
 public:
 	SceneManager();
