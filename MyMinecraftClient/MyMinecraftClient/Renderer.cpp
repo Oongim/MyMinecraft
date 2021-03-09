@@ -1,10 +1,14 @@
 #include "Renderer.h"
 #include <fstream>
 
+#define STB_IMAGE_IMPLEMENTATION    
+#include "stb_image.h"
+
 Renderer::Renderer()
 {
 	//Load shaders
 	m_testShader = CompileShaders("./Shaders/vertex_color.vs", "./Shaders/vertex_color.fs");
+	stbi_set_flip_vertically_on_load(true);//처음에 텍스쳐 뒤집어서 나오는데 뒤집게해줌
 }
 
 Renderer::~Renderer()
@@ -14,7 +18,7 @@ Renderer::~Renderer()
 	delete this->instance();
 }
 
-void Renderer::drawTriangle(float* vertexArray,int v_size)
+void Renderer::drawTriangle(float* vertexArray, int v_size, glm::vec3 trans = { 0,0,0 })
 {
 	glGenBuffers(1, &m_VBORect);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBORect);
@@ -22,14 +26,108 @@ void Renderer::drawTriangle(float* vertexArray,int v_size)
 	
 	glUseProgram(m_testShader);
 
+	GLuint uTrans = glGetUniformLocation(m_testShader, "u_Trans");
+
+	glUniform3f(uTrans, trans.x,trans.y,trans.z);
+
 	int attribPosition = glGetAttribLocation(m_testShader, "pos");
 	glEnableVertexAttribArray(attribPosition);
+	int attribColor = glGetAttribLocation(m_testShader, "color");
+	glEnableVertexAttribArray(attribColor);
+
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBORect);
 	glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
+	glVertexAttribPointer(attribColor, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 7, (GLvoid*)(sizeof(float)*3));
 
 	glDrawArrays(GL_TRIANGLES, 0, 3);
+	
+	glDisableVertexAttribArray(0);
+}
+void Renderer::drawRectangle(float* vertexArray, int v_size, glm::vec3 trans = { 0,0,0 })
+{
+	glGenBuffers(1, &m_VBORect);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBORect);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexArray) * v_size, vertexArray, GL_STATIC_DRAW);
+
+	glUseProgram(m_testShader);
+
+	GLuint uTrans = glGetUniformLocation(m_testShader, "u_Trans");
+
+	glUniform3f(uTrans, trans.x, trans.y, trans.z);
+
+	int attribPosition = glGetAttribLocation(m_testShader, "pos");
+	glEnableVertexAttribArray(attribPosition);
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBORect);
+	glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
+	//glVertexAttribPointer(attribColor, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 7, (GLvoid*)(sizeof(float)*3));
+
+	glDrawArrays(GL_QUADS, 0, 4);
 
 	glDisableVertexAttribArray(0);
+}
+
+void Renderer::drawTexture(float* vertexArray, int v_size, GLuint textureID,glm::vec3 trans)
+{
+	glGenBuffers(1, &m_VBORect);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBORect);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexArray) * v_size, vertexArray, GL_STATIC_DRAW);
+
+	glUseProgram(m_testShader);
+
+	GLuint uTrans = glGetUniformLocation(m_testShader, "u_Trans");
+	GLuint uTexture = glGetUniformLocation(m_testShader, "u_Texture");
+
+	glUniform3f(uTrans, trans.x, trans.y, trans.z);
+	glUniform1i(uTexture, 0);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, m_Textures[textureID]);
+
+	int attribPosition = glGetAttribLocation(m_testShader, "pos");
+	glEnableVertexAttribArray(attribPosition);
+	int attribUV = glGetAttribLocation(m_testShader, "uv");
+	glEnableVertexAttribArray(attribUV);
+
+	unsigned attribSize = 3 + 2;
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBORect);
+	glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * attribSize, 0);
+	glVertexAttribPointer(attribUV, 2, GL_FLOAT, GL_FALSE, sizeof(float) * attribSize, (GLvoid*)(sizeof(float) * 3));
+
+	glDrawArrays(GL_QUADS, 0, 4);
+
+	glDisableVertexAttribArray(0);
+}
+
+int Renderer::GenPngTexture(const char* filePath)
+{
+	int idx = m_Textures.size();
+
+	GLuint temp;
+	glGenTextures(1, &temp);
+	glBindTexture(GL_TEXTURE_2D, temp);
+	// 텍스처 wrapping/filtering 옵션 설정(현재 바인딩된 텍스처 객체에 대해)
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	// 텍스처 로드 및 생성
+	int width, height, nrChannels;
+	unsigned char* data = stbi_load(filePath, &width, &height, &nrChannels, 0);
+	if (data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		std::cout << "Failed to load texture" << std::endl;
+	}
+	stbi_image_free(data);
+
+	m_Textures.emplace_back(temp);
+	return idx;
 }
 
 bool Renderer::ReadFile(const char* filename, std::string* target)

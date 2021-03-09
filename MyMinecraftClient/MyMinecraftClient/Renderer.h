@@ -5,6 +5,7 @@
 #include <iostream>
 #include <windows.h>
 #include <string>
+#include <vector>
 
 class Renderer
 {
@@ -17,6 +18,8 @@ public: // 싱글톤 인스턴스
 private:
 	unsigned int m_windowWidth = 0;
 	unsigned int m_windowHeight = 0;
+
+	std::vector<GLuint> m_Textures;
 	
 	GLuint m_testShader = 0;
 	GLuint m_VBORect = 0;
@@ -25,7 +28,12 @@ private:
 	~Renderer();
 
 public:
-	void drawTriangle(float* vertexBuffer, int v_size);
+	void drawTriangle(float* vertexArray, int v_size, glm::vec3 trans);
+	void drawRectangle(float* vertexArray, int v_size, glm::vec3 trans);
+	void drawTexture(float* vertexArray, int v_size, GLuint textureID, glm::vec3 trans);
+
+public:
+	int GenPngTexture(const char* filePath);
 
 public:	//파일 로드
 	bool ReadFile(const char* filename, std::string* target);

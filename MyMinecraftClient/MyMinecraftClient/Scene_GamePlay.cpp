@@ -22,6 +22,28 @@ Scene_GamePlay::Scene_GamePlay()
 	glLoadIdentity();
 	glOrtho(-1.f, 1.f, -1.f, 1.f, -1.f, 1.f);
 	glMatrixMode(GL_MODELVIEW);
+
+	//initialize
+	transform = { 0,0,0 };
+
+	float scale = 1.f;
+	Mesh mesh;
+	
+	mesh.addVertex({ -1.f * scale, -1.f * scale, 0.f });
+	mesh.addTexCoord({ 0.f,0.f});
+
+	mesh.addVertex({ -1.f * scale , 1.f * scale , 0.f });
+	mesh.addTexCoord({ 0.f,1.f });
+
+	mesh.addVertex({ 1.f * scale, 1.f * scale, 0.f });
+	mesh.addTexCoord({ 1.f,1.f });
+
+	mesh.addVertex({ 1.f * scale, -1.f * scale, 0.f });
+	mesh.addTexCoord({ 1.f,0.f });
+
+	vertexArray = mesh.getVerticeArray(MESH_VERTICE | MESH_TEXCOORD,size);
+
+	testTextureID = m_Renderer->GenPngTexture("./Resource/parrot.png");
 }
 
 Scene_GamePlay::~Scene_GamePlay()
@@ -30,14 +52,19 @@ Scene_GamePlay::~Scene_GamePlay()
 
 void Scene_GamePlay::DrawScene()
 {
-	Mesh mesh;
-	mesh.addVertex({ -1.f, -1.f, 0.f });
-	mesh.addVertex({ 0.f, 1.f, 0.f });
-	mesh.addVertex({ 1.f, -1.f, 0.f });
-
-	m_Renderer->drawTriangle(mesh.getVerticeArray(), mesh.getVerticeSize());
+	m_Renderer->drawTexture(vertexArray, size, testTextureID,transform);
 }
 
 void Scene_GamePlay::Update()
 {
+}
+
+void Scene_GamePlay::KeyDownInput(unsigned char key, int x, int y)
+{
+	switch (key)
+	{
+	case 'a':
+		transform.x -= 0.1f;
+		break;
+	}
 }
