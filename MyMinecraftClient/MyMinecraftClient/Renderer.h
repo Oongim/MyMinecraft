@@ -30,10 +30,12 @@ private:
 public:
 	void drawTriangle(float* vertexArray, int v_size, glm::vec3 trans);
 	void drawRectangle(float* vertexArray, int v_size, glm::vec3 trans);
-	void drawTexture(float* vertexArray, int v_size, GLuint textureID, glm::vec3 trans);
+	void drawTexture(float* vertexArray, int v_size, GLuint textureID, glm::vec3 trans, glm::vec4 col);
 
 public:
-	int GenPngTexture(const char* filePath);
+	void setScreenSize(const unsigned int& width, const unsigned int& height);
+	void getScreenSize(unsigned int& width, unsigned int& height);
+	int GenPngTexture(const char* filePath, int& fileWidth, int& fileHeight, GLint loadFormat = GL_RGBA);
 
 public:	//파일 로드
 	bool ReadFile(const char* filename, std::string* target);

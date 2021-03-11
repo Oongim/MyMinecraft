@@ -8,6 +8,7 @@ Renderer::Renderer()
 {
 	//Load shaders
 	m_testShader = CompileShaders("./Shaders/vertex_color.vs", "./Shaders/vertex_color.fs");
+
 	stbi_set_flip_vertically_on_load(true);//처음에 텍스쳐 뒤집어서 나오는데 뒤집게해줌
 }
 
@@ -67,7 +68,7 @@ void Renderer::drawRectangle(float* vertexArray, int v_size, glm::vec3 trans = {
 	glDisableVertexAttribArray(0);
 }
 
-void Renderer::drawTexture(float* vertexArray, int v_size, GLuint textureID,glm::vec3 trans)
+void Renderer::drawTexture(float* vertexArray, int v_size, GLuint textureID,glm::vec3 trans, glm::vec4 col)
 {
 	glGenBuffers(1, &m_VBORect);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBORect);
@@ -75,10 +76,18 @@ void Renderer::drawTexture(float* vertexArray, int v_size, GLuint textureID,glm:
 
 	glUseProgram(m_testShader);
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
+
 	GLuint uTrans = glGetUniformLocation(m_testShader, "u_Trans");
+	GLuint uCol = glGetUniformLocation(m_testShader, "u_Col");
 	GLuint uTexture = glGetUniformLocation(m_testShader, "u_Texture");
 
 	glUniform3f(uTrans, trans.x, trans.y, trans.z);
+	glUniform4f(uCol, col.r, col.g, col.b, col.a);
 	glUniform1i(uTexture, 0);
 
 	glActiveTexture(GL_TEXTURE0);
@@ -98,9 +107,24 @@ void Renderer::drawTexture(float* vertexArray, int v_size, GLuint textureID,glm:
 	glDrawArrays(GL_QUADS, 0, 4);
 
 	glDisableVertexAttribArray(0);
+
+	glDisable(GL_BLEND);
+	glDisable(GL_DEPTH_TEST);
 }
 
-int Renderer::GenPngTexture(const char* filePath)
+void Renderer::setScreenSize(const unsigned int& width, const unsigned int& height)
+{
+	m_windowWidth = width;
+	m_windowHeight = height;
+}
+
+void Renderer::getScreenSize(unsigned int& width, unsigned int& height)
+{
+	width = m_windowWidth;
+	height = m_windowHeight;
+}
+
+int Renderer::GenPngTexture(const char* filePath, int& fileWidth, int& fileHeight,GLint loadFormat)
 {
 	int idx = m_Textures.size();
 
@@ -113,11 +137,11 @@ int Renderer::GenPngTexture(const char* filePath)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	// 텍스처 로드 및 생성
-	int width, height, nrChannels;
-	unsigned char* data = stbi_load(filePath, &width, &height, &nrChannels, 0);
+	int nrChannels;
+	unsigned char* data = stbi_load(filePath, &fileWidth, &fileHeight, &nrChannels, 0);
 	if (data)
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_2D, 0, loadFormat, fileWidth, fileHeight, 0, loadFormat, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else

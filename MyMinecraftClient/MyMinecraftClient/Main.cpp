@@ -73,11 +73,13 @@ void Reshape(int w, int h)
 
 int main(int argc, char** argv)
 {
+	int ScreenWidth = 800;
+	int ScreenHeight = 600;
 	// openGL 설정
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(400, 0);
-	glutInitWindowSize(800, 600);		// 프로그램 외부 사이즈 결정
+	glutInitWindowSize(ScreenWidth, ScreenHeight);		// 프로그램 외부 사이즈 결정
 	glutCreateWindow("My Minecraft Client");
 	
 	glewInit();
@@ -85,7 +87,7 @@ int main(int argc, char** argv)
 	else									std::cout << "GLEW 3.0 not supported\n ";
 
 	// 초기화
-	g_ScnMgr = new SceneManager;
+	g_ScnMgr = new SceneManager(ScreenWidth, ScreenHeight);
 
 	// 함수연결
 	glutDisplayFunc(Display);
@@ -97,6 +99,8 @@ int main(int argc, char** argv)
 	glutSpecialFunc(SpecialKeyDownInput);
 	glutSpecialUpFunc(SpecialKeyUpInput);
 	glutReshapeFunc(Reshape);
+
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// 루프
 	glutTimerFunc(10, Update, 0);	// 10milliseconds에 Update 호출  함수에 value전달

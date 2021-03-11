@@ -9,7 +9,7 @@ private:
 	Scene* m_CurrentScene;
 
 public:
-	SceneManager();
+	SceneManager(unsigned int screenWidth,unsigned int screenHeight);
 	~SceneManager();
 
 public:

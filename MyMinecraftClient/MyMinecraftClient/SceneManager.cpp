@@ -1,9 +1,10 @@
 #include "SceneManager.h"
 
-SceneManager::SceneManager()
+SceneManager::SceneManager(unsigned int screenWidth, unsigned int screenHeight)
 {
 	// Initialize
 	m_Renderer = Renderer::instance();
+	m_Renderer->setScreenSize(screenWidth, screenHeight);
 
 	m_CurrentScene = new Scene_GamePlay();
 }
@@ -14,7 +15,7 @@ SceneManager::~SceneManager()
 
 void SceneManager::Update(float ElapsedTime)
 {
-	m_CurrentScene->Update();
+	m_CurrentScene->Update(ElapsedTime);
 }
 
 void SceneManager::DrawScene()
