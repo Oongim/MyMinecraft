@@ -36,25 +36,46 @@ Scene_GamePlay::~Scene_GamePlay()
 
 void Scene_GamePlay::InitialObejct()
 {
+	m_objects.reserve(2);
 	m_Player = new Object_Character();
+	m_objects.emplace_back(std::vector<Object*>{});
+	m_objects.emplace_back(std::vector<Object*>{});
+	m_objects.emplace_back(std::vector<Object*>{});
 
-	m_objects.emplace_back(new Object_BackGround());
-	m_objects.emplace_back(new Object_Cloud());
+	m_objects[Layer::RGB].emplace_back(new Object_BackGround());
+	m_objects[Layer::RGBA].emplace_back(new Object_Cloud());
+	m_objects[Layer::ADD_RGBA].emplace_back(new Object_Sun());
 }
 
 void Scene_GamePlay::DrawScene()
 {
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
+	
 	m_Player->Draw();
-	for (auto object : m_objects) {
-		object->Draw();
+
+	for (int i = 0; i < Layer::SIZE; ++i) {
+		for (auto object : m_objects[i]) {
+			object->Draw();
+		}
+		if (i == RGB) {
+			glDisable(GL_DEPTH_TEST);
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		}
+		else if (i == RGBA)
+			glBlendFunc(GL_SRC_ALPHA, GL_DST_ALPHA);
 	}
+	glDisable(GL_BLEND);
 }
 
 void Scene_GamePlay::Update(float elapsedTime)
 {
 	m_Player->Update(elapsedTime);
-	for (auto object : m_objects) {
-		object->Update(elapsedTime);
+	for (auto objectLayer : m_objects) {
+		for (auto object : objectLayer) {
+			object->Update(elapsedTime);
+		}
 	}
 }
 

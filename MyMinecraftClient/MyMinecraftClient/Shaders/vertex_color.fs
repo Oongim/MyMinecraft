@@ -12,5 +12,4 @@ void main()
 	outColor = texture(u_Texture, fragUV);
 	if(outColor.a < 0.8) discard;
 	outColor.a = u_Col.a;
-	
 }

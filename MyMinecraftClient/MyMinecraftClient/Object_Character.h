@@ -7,6 +7,8 @@ private:
 	glm::vec3 transform;
 	TextureInfo testTextureID{};
 
+	float frame = 0;
+
 public:
 	Object_Character();
 	virtual ~Object_Character();
@@ -18,5 +20,6 @@ public:
 public:
 	void SetPos(const glm::vec3& pos);
 	glm::vec3 GetPos() const;
+
 };
 

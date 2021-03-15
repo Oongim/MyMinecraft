@@ -30,7 +30,8 @@ private:
 public:
 	void drawTriangle(float* vertexArray, int v_size, glm::vec3 trans);
 	void drawRectangle(float* vertexArray, int v_size, glm::vec3 trans);
-	void drawTexture(float* vertexArray, int v_size, GLuint textureID, glm::vec3 trans, glm::vec4 col);
+	void drawTexture(float* vertexArray, int v_size, GLuint textureID, glm::vec3 trans, glm::vec4 col,
+		glm::vec2 size , glm::vec2 frame);
 
 public:
 	void setScreenSize(const unsigned int& width, const unsigned int& height);

@@ -5,12 +5,17 @@
 
 class Scene_GamePlay:public Scene
 {
+	
 private:
 	Object_Character* m_Player = nullptr;
-	std::vector<Object*> m_objects;
+	std::vector<std::vector<Object*>> m_objects;  //알파 블랜딩 되는 오브젝트와의 레이어 구분
 	float elapsedTime;
 
 public:
+	enum Layer {
+		RGB = 0, RGBA, ADD_RGBA,
+		SIZE
+	};
 	Scene_GamePlay();
 	virtual ~Scene_GamePlay();
 

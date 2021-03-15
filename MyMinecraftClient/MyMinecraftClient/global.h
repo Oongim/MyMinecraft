@@ -139,6 +139,8 @@ public:
 	float* vertexArray = nullptr;
 	unsigned int size = 0;
 
+	GLint textureMode = 0;
+
 public:
 	Object(){ m_Renderer = Renderer::instance(); };
 	virtual ~Object() { delete vertexArray; };

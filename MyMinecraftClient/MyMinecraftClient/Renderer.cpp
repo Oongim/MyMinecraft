@@ -9,7 +9,7 @@ Renderer::Renderer()
 	//Load shaders
 	m_testShader = CompileShaders("./Shaders/vertex_color.vs", "./Shaders/vertex_color.fs");
 
-	stbi_set_flip_vertically_on_load(true);//처음에 텍스쳐 뒤집어서 나오는데 뒤집게해줌
+	//stbi_set_flip_vertically_on_load(true);//처음에 텍스쳐 뒤집어서 나오는데 뒤집게해줌
 }
 
 Renderer::~Renderer()
@@ -68,7 +68,7 @@ void Renderer::drawRectangle(float* vertexArray, int v_size, glm::vec3 trans = {
 	glDisableVertexAttribArray(0);
 }
 
-void Renderer::drawTexture(float* vertexArray, int v_size, GLuint textureID,glm::vec3 trans, glm::vec4 col)
+void Renderer::drawTexture(float* vertexArray, int v_size, GLuint textureID,glm::vec3 trans, glm::vec4 col,glm::vec2 size,glm::vec2 frame)
 {
 	glGenBuffers(1, &m_VBORect);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBORect);
@@ -76,19 +76,20 @@ void Renderer::drawTexture(float* vertexArray, int v_size, GLuint textureID,glm:
 
 	glUseProgram(m_testShader);
 
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LEQUAL);
 
 	GLuint uTrans = glGetUniformLocation(m_testShader, "u_Trans");
 	GLuint uCol = glGetUniformLocation(m_testShader, "u_Col");
 	GLuint uTexture = glGetUniformLocation(m_testShader, "u_Texture");
+	GLuint uSpriteSize = glGetUniformLocation(m_testShader, "u_SpriteSize");
+	GLuint uSpriteOffset = glGetUniformLocation(m_testShader, "u_SpriteOffset");
+	
 
+	glUniform2f(uSpriteSize, size.x, size.y);
+	glUniform2f(uSpriteOffset, frame.x, frame.y);
 	glUniform3f(uTrans, trans.x, trans.y, trans.z);
 	glUniform4f(uCol, col.r, col.g, col.b, col.a);
 	glUniform1i(uTexture, 0);
+	
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_Textures[textureID]);
@@ -108,8 +109,7 @@ void Renderer::drawTexture(float* vertexArray, int v_size, GLuint textureID,glm:
 
 	glDisableVertexAttribArray(0);
 
-	glDisable(GL_BLEND);
-	glDisable(GL_DEPTH_TEST);
+
 }
 
 void Renderer::setScreenSize(const unsigned int& width, const unsigned int& height)
