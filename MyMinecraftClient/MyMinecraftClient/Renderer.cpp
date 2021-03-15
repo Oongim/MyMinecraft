@@ -68,7 +68,7 @@ void Renderer::drawRectangle(float* vertexArray, int v_size, glm::vec3 trans = {
 	glDisableVertexAttribArray(0);
 }
 
-void Renderer::drawTexture(float* vertexArray, int v_size, GLuint textureID,glm::vec3 trans, glm::vec4 col,glm::vec2 size,glm::vec2 frame)
+void Renderer::drawTexture(float* vertexArray, int v_size, GLuint textureID,glm::vec3 trans, glm::vec4 col,glm::vec2 size,glm::vec2 frame,bool isLeft)
 {
 	glGenBuffers(1, &m_VBORect);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBORect);
@@ -82,6 +82,7 @@ void Renderer::drawTexture(float* vertexArray, int v_size, GLuint textureID,glm:
 	GLuint uTexture = glGetUniformLocation(m_testShader, "u_Texture");
 	GLuint uSpriteSize = glGetUniformLocation(m_testShader, "u_SpriteSize");
 	GLuint uSpriteOffset = glGetUniformLocation(m_testShader, "u_SpriteOffset");
+	GLuint uIsLeft = glGetUniformLocation(m_testShader, "u_isLeft");
 	
 
 	glUniform2f(uSpriteSize, size.x, size.y);
@@ -89,6 +90,7 @@ void Renderer::drawTexture(float* vertexArray, int v_size, GLuint textureID,glm:
 	glUniform3f(uTrans, trans.x, trans.y, trans.z);
 	glUniform4f(uCol, col.r, col.g, col.b, col.a);
 	glUniform1i(uTexture, 0);
+	glUniform1i(uIsLeft, isLeft);
 	
 
 	glActiveTexture(GL_TEXTURE0);

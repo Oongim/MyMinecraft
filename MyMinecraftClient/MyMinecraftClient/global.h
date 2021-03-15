@@ -20,16 +20,25 @@ struct TextureInfo {
 	int height;
 };
 
-template<typename T>
-void DebugPrint(T a) {
-	std::cout << a << std::endl;
-}
+struct KeyInput {
+	bool W;
+	bool S;
+	bool A;
+	bool D;
+};
 
-template<typename T>
-void DebugPrint(T a, T b) {
-	std::cout << a << ", " << b << std::endl;
-}
+namespace Debug {
+	template<typename T>
+	void DebugPrint(T a) {
+		std::cout << a << std::endl;
+	}
 
+	template<typename T>
+	void DebugPrint(T a, T b) {
+		std::cout << a << ", " << b << std::endl;
+	}
+
+}
 #define MESH_VERTICE 0b001
 #define MESH_COLOR 0b010
 #define MESH_TEXCOORD 0b100

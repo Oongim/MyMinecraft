@@ -81,21 +81,36 @@ void Scene_GamePlay::Update(float elapsedTime)
 
 void Scene_GamePlay::KeyDownInput(unsigned char key, int x, int y)
 {
-	glm::vec3 temp = m_Player->GetPos();
-	switch (key)
-	{	
-	case 'a':
-		temp.x -= 0.1f;
-		break;
-	case 'd':
-		temp.x += 0.1f;
-		break;
-	case 'w':
-		temp.y += 0.1f;
-		break;
-	case 's':
-		temp.y -= 0.1f;
-		break;
+	KeyInput temp = m_Player->GetKeyInput();
+	if (key == 'w') {
+		temp.W = true;
 	}
-	m_Player->SetPos(temp);
+	if (key == 's') {
+		temp.S = true;
+	}
+	if (key == 'a') {
+		temp.A = true;
+	}
+	if (key == 'd') {
+		temp.D = true;
+	}
+	m_Player->SetKeyInput(temp);
+}
+
+void Scene_GamePlay::KeyUpInput(unsigned char key, int x, int y)
+{
+	KeyInput temp = m_Player->GetKeyInput();
+	if (key == 'w') {
+		temp.W = false;
+	}
+	if (key == 's') {
+		temp.S = false;
+	}
+	if (key == 'a') {
+		temp.A = false;
+	}
+	if (key == 'd') {
+		temp.D = false;
+	}
+	m_Player->SetKeyInput(temp);
 }
