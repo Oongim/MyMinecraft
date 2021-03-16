@@ -38,13 +38,16 @@ void Scene_GamePlay::InitialObejct()
 {
 	m_objects.reserve(2);
 	m_Player = new Object_Character();
-	m_objects.emplace_back(std::vector<Object*>{});
-	m_objects.emplace_back(std::vector<Object*>{});
-	m_objects.emplace_back(std::vector<Object*>{});
+	m_objects.emplace_back(std::vector<Object_Basic*>{});
+	m_objects.emplace_back(std::vector<Object_Basic*>{});
+	m_objects.emplace_back(std::vector<Object_Basic*>{});
 
-	m_objects[Layer::RGB].emplace_back(new Object_BackGround());
-	m_objects[Layer::RGBA].emplace_back(new Object_Cloud());
-	m_objects[Layer::ADD_RGBA].emplace_back(new Object_Sun());
+	m_objects[Layer::RGB].emplace_back(new Object_Basic("./Resource/forest.png", GL_RGB,0.5f, { 0,0,0,1 }));
+	m_objects[Layer::RGBA].emplace_back(new Object_Basic("./Resource/cloud.png", GL_RGBA, 0.5f, { 0,0,0,0.8 }));
+	m_objects[Layer::ADD_RGBA].emplace_back(new Object_Basic("./Resource/sun.png", GL_RGBA,0.5f, { 0,0,0,1 }));
+
+	m_objects[Layer::RGBA][0]->AddOffset(glm::vec3(-0.55f, 0, 0));
+	m_objects[Layer::RGBA][0]->SetScale(glm::vec3(1.f, 1.f, 1.f));
 }
 
 void Scene_GamePlay::DrawScene()
@@ -71,12 +74,16 @@ void Scene_GamePlay::DrawScene()
 
 void Scene_GamePlay::Update(float elapsedTime)
 {
+	static float x=-0.55f;
 	m_Player->Update(elapsedTime);
 	for (auto objectLayer : m_objects) {
 		for (auto object : objectLayer) {
 			object->Update(elapsedTime);
 		}
 	}
+	x = (x > 1.15f) ? -1.15f : x = x + 0.001f;
+	m_objects[Layer::RGBA][0]->SetPosition(glm::vec3(x, 0.f, 0.f));
+	m_objects[Layer::ADD_RGBA][0]->Rotate(-0.004f,glm::vec3(0.f, 0.f, 1.f));
 }
 
 void Scene_GamePlay::KeyDownInput(unsigned char key, int x, int y)

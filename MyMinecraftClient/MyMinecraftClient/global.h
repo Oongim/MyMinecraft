@@ -1,6 +1,8 @@
 #pragma once
 
 #include <GL/glm/glm.hpp>
+#include <GL/glm/mat4x4.hpp>
+#include <GL/glm/gtc/matrix_transform.hpp>
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 #include <windows.h>
@@ -150,6 +152,8 @@ public:
 
 	GLint textureMode = 0;
 
+	glm::mat4 transform= glm::mat4(1.0f);
+
 public:
 	Object(){ m_Renderer = Renderer::instance(); };
 	virtual ~Object() { delete vertexArray; };
@@ -157,5 +161,9 @@ public:
 public:
 	virtual void Draw() = 0;
 	virtual void Update(float ElapsedTime) = 0;
+
+public:
+	void SetTransform(const glm::mat4& trans) {transform = trans;};
+	glm::mat4 GetTransform() const {return transform;};
 
 };

@@ -1,50 +1,35 @@
 #pragma once
 #include "Global.h"
 
-class Object_BackGround :	public Object
+class Object_Basic :	public Object
 {
 private:
-	TextureInfo BGTextureID{};
+	TextureInfo TextureID{};
+
+	glm::vec4 m_color;
+
+	glm::vec3 m_pos = glm::vec3(1.0f);
+	glm::mat4 m_rot = glm::mat4(1.0f);
+	glm::vec3 m_scale = glm::vec3(1.f);
 
 public:
-	Object_BackGround();
-	virtual ~Object_BackGround();
+	Object_Basic(const char* path, GLint mode, float depth, glm::vec4 color);
+	virtual ~Object_Basic();
 
 public:
 	virtual void Draw();
 	virtual void Update(float ElapsedTime);
 
-};
-
-class Object_Sun : public Object
-{
-private:
-	glm::vec3 transform;
-	TextureInfo testTextureID{};
-
 public:
-	Object_Sun();
-	virtual ~Object_Sun();
+	void AddOffset(const glm::vec3& pos);
 
-public:
-	virtual void Draw();
-	virtual void Update(float ElapsedTime);
+	void SetPosition(const glm::vec3& pos);
+	glm::vec3 GetPosition() const;
+	void Rotate(const float& degrees, const glm::vec3& axis);
+	glm::mat4 GetRotation() const;
+	void SetScale(const glm::vec3& scale);
+	glm::vec3 GetScale() const;
 
 };
 
-class Object_Cloud : public Object
-{
-private:
-	glm::vec3 transform;
-	TextureInfo testTextureID{};
-
-public:
-	Object_Cloud();
-	virtual ~Object_Cloud();
-
-public:
-	virtual void Draw();
-	virtual void Update(float ElapsedTime);
-
-};
 

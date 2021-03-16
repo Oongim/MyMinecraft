@@ -8,7 +8,7 @@ class Scene_GamePlay:public Scene
 	
 private:
 	Object_Character* m_Player = nullptr;
-	std::vector<std::vector<Object*>> m_objects;  //알파 블랜딩 되는 오브젝트와의 레이어 구분
+	std::vector<std::vector<Object_Basic*>> m_objects;  //알파 블랜딩 되는 오브젝트와의 레이어 구분
 	float elapsedTime;
 
 public:
