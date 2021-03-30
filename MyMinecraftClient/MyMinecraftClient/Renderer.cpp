@@ -4,6 +4,8 @@
 #define STB_IMAGE_IMPLEMENTATION    
 #include "stb_image.h"
 
+using namespace glm;
+
 Renderer::Renderer()
 {
 	//Load shaders
@@ -77,7 +79,8 @@ void Renderer::drawTexture(float* vertexArray, int v_size, GLuint textureID,glm:
 	glUseProgram(m_testShader);
 
 
-	GLuint uTrans = glGetUniformLocation(m_testShader, "u_Transfrom");
+	GLuint uTrans = glGetUniformLocation(m_testShader, "u_ModelMat");
+	GLuint uViewMat = glGetUniformLocation(m_testShader, "u_ViewMat");
 	GLuint uCol = glGetUniformLocation(m_testShader, "u_Col");
 	GLuint uTexture = glGetUniformLocation(m_testShader, "u_Texture");
 	GLuint uSpriteSize = glGetUniformLocation(m_testShader, "u_SpriteSize");
@@ -87,7 +90,8 @@ void Renderer::drawTexture(float* vertexArray, int v_size, GLuint textureID,glm:
 
 	glUniform2f(uSpriteSize, size.x, size.y);
 	glUniform2f(uSpriteOffset, frame.x, frame.y);
-	glUniformMatrix4fv(uTrans, 1,GL_FALSE,value_ptr(trans));
+	glUniformMatrix4fv(uTrans, 1, GL_FALSE, value_ptr(trans));
+	glUniformMatrix4fv(uViewMat, 1,GL_FALSE,value_ptr(getViewMatrix()));
 	glUniform4f(uCol, col.r, col.g, col.b, col.a);
 	glUniform1i(uTexture, 0);
 	glUniform1i(uIsLeft, isLeft);
@@ -114,18 +118,55 @@ void Renderer::drawTexture(float* vertexArray, int v_size, GLuint textureID,glm:
 
 }
 
+glm::mat4 Renderer::getViewMatrix() const
+{
+	mat4 viewMat = glm::mat4(1.0f);
+	viewMat = translate(viewMat, m_camera.position);
+	viewMat = rotate(viewMat, glm::radians(m_camera.rotation), glm::vec3(0.f, 0.f, 1.f));	//2D에서는 z축 기준으로 회전
+
+	return inverse(viewMat);		//카메라의 변환에 반대로 오브젝트들이 움직여야 하므로 역행렬을 반환
+}
+
+void Renderer::setCameraPosition(const glm::vec3 pos)
+{
+	m_camera.position = pos;
+}
+
+glm::vec3 Renderer::getCameraPosition() const
+{
+	return m_camera.position;
+}
+
+void Renderer::setCameraDegree(const float degree)
+{
+	m_camera.rotation = degree;
+}
+
+float Renderer::getCameraDegree() const
+{
+	return m_camera.rotation;
+}
+
+void Renderer::addCameraOffset(const glm::vec3 pos)
+{
+	m_camera.position += pos;
+}
+
+void Renderer::addCameraDegree(const float degree)
+{
+	m_camera.rotation += degree;
+}
+
 void Renderer::setScreenSize(const unsigned int& width, const unsigned int& height)
 {
 	m_windowWidth = width;
 	m_windowHeight = height;
 }
-
 void Renderer::getScreenSize(unsigned int& width, unsigned int& height)
 {
 	width = m_windowWidth;
 	height = m_windowHeight;
 }
-
 int Renderer::GenPngTexture(const char* filePath, int& fileWidth, int& fileHeight,GLint loadFormat)
 {
 	int idx = m_Textures.size();

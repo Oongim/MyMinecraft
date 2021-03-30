@@ -101,6 +101,18 @@ void Scene_GamePlay::KeyDownInput(unsigned char key, int x, int y)
 	if (key == 'd') {
 		temp.D = true;
 	}
+	if (key == 'i') {
+		m_Renderer->addCameraOffset(glm::vec3(0, 0.1f, 0));
+	}
+	if (key == 'k') {
+		m_Renderer->addCameraOffset(glm::vec3(0, -0.1f, 0));
+	}
+	if (key == 'j') {
+		m_Renderer->addCameraDegree(-0.5f);
+	}
+	if (key == 'l') {
+		m_Renderer->addCameraDegree(0.5f);
+	}
 	m_Player->SetKeyInput(temp);
 }
 

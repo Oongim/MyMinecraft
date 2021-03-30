@@ -8,6 +8,11 @@
 #include <string>
 #include <vector>
 
+struct CameraData {
+	glm::vec3 position;
+	float rotation;
+};
+
 class Renderer
 {
 public: // 싱글톤 인스턴스
@@ -25,16 +30,28 @@ private:
 	GLuint m_testShader = 0;
 	GLuint m_VBORect = 0;
 
+	CameraData m_camera{};
+
+private:
 	Renderer();
 	~Renderer();
 
-public:
+public:	//쉐이더 사용한 그리기 함수
 	void drawTriangle(float* vertexArray, int v_size, glm::vec3 trans);
 	void drawRectangle(float* vertexArray, int v_size, glm::vec3 trans);
 	void drawTexture(float* vertexArray, int v_size, GLuint textureID, glm::mat4 trans, glm::vec4 col,
 		glm::vec2 size , glm::vec2 frame, bool isLeft=false);
 
-public:
+public:	//카메라 설정 함수들
+	glm::mat4 getViewMatrix() const;
+	void setCameraPosition(const glm::vec3 pos);
+	glm::vec3 getCameraPosition() const;
+	void setCameraDegree(const float degree);
+	float getCameraDegree() const;
+	void addCameraOffset(const glm::vec3 pos);
+	void addCameraDegree(const float degree);
+
+public:	//스크린사이즈 구하기, 텍스쳐 인덱스 생성
 	void setScreenSize(const unsigned int& width, const unsigned int& height);
 	void getScreenSize(unsigned int& width, unsigned int& height);
 	int GenPngTexture(const char* filePath, int& fileWidth, int& fileHeight, GLint loadFormat = GL_RGBA);
